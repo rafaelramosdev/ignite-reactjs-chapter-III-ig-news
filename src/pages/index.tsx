@@ -1,4 +1,4 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 
 import Head from 'next/head'
 
@@ -40,7 +40,7 @@ export default function Home({ product }: HomeProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const price = await stripe.prices.retrieve('price_1KOQRsFRUqrmGnwbG92WokxH')
   
   const product = {
@@ -54,6 +54,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {
       product
-    }
+    },
+    revalidate: 60 * 60 * 24, // 24 hours
   }
 }
+
+// 3 main ways to make an api call in React/Next.js 
+
+// Client-side/Single-page Application (SPA) -> page that needs information that is loaded with some user action and not necessarily when the page is loaded/information that sometimes has no need to already be there when the page is loaded or that do not need indexing/SEO
+// Server-side (SSR) -> page that need dynamic user session data/real-time information from the user who is accessing, from the context of the request, and who need indexing/SEO
+// Static Site Generation (SSG) -> page that will be the same for all users and that need indexing/SEO
