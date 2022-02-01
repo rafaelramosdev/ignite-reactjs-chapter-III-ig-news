@@ -60,4 +60,8 @@
       }
     }
   }
+
+  button { 
+    margin-left: auto; // when applying "auto" margin on either side, it will try to give as much margin as it can/as possible
+  }
 }
