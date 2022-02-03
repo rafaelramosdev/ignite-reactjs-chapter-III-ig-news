@@ -16,7 +16,7 @@ export function ActiveLink({ children, activeClassName, ...rest }: ActiveLinkPro
 
   return (
     <Link {...rest}>
-      {cloneElement(children, { // 'cloneElement' serves to clone the element it receives in the first parameter, but adds properties to that element that are passed as an object in the second parameter
+      {cloneElement(children, { // 'cloneElement' serves to clone the element it receives in the first parameter, but adds properties to that element that are passed as an object in the second parameter, thus being very useful when it needs to modify the behavior of some component that we receive as property or children
         className
       })}
     </Link>
