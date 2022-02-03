@@ -9,8 +9,13 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   if(request.method === 'POST') {
     const session = await getSession({ req: request })
 
+    const sessionUser = {
+      ...session.user,
+      email: 'ig-news@ignews.com'
+    }
+    
     const stripeCustomer = await stripe.customers.create({
-      email: session.user.email,
+      email: sessionUser.email,
       // metadata
     })
 
@@ -19,7 +24,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
       payment_method_types: ['card'],
       billing_address_collection: 'required',
       line_items: [
-        { price: 'price_1KOQRsFRUqrmGnwbG92WokxH', quantity: 1 }
+        { price: 'price_1KOtZuJBZ6EJIhyIyOkznXOy', quantity: 1 }
       ],
       mode: 'subscription',
       allow_promotion_codes: true,
