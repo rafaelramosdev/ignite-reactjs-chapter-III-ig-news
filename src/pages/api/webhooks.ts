@@ -28,7 +28,9 @@ export const config = {
 }
 
 const relevantEvents = new Set([ // 'Set' is like an array only that can not have anything duplicated inside it, it is a different data structure but ensures that we will treat only the data we want
-  'checkout.session.completed'
+  'checkout.session.completed',
+  'customer.subscription.updated',
+  'customer.subscription.deleted',
 ])
 
 export default async(request: NextApiRequest, response: NextApiResponse) => {
@@ -50,13 +52,25 @@ export default async(request: NextApiRequest, response: NextApiResponse) => {
     if(relevantEvents.has(type)) {
       try {
         switch(type) {
-          case 'checkout.session.completed':
+          // that way the 2 cases will use the same logic
+          case 'customer.subscription.updated':
+          case 'customer.subscription.deleted':
+            const subscription = event.data.object as Stripe.Subscription
 
+            await saveSubscription(
+              subscription.id,
+              subscription.customer.toString(),
+              false
+            )
+
+            break
+          case 'checkout.session.completed':
             const checkoutSession = event.data.object as Stripe.Checkout.Session
 
             await saveSubscription(
               checkoutSession.subscription.toString(),
-              checkoutSession.customer.toString()
+              checkoutSession.customer.toString(),
+              true
             )
 
             break

@@ -6,7 +6,8 @@ import { stripe } from "../../../services/stripe";
 
 export async function saveSubscription(
   subscriptionId: string,
-  customerId: string
+  customerId: string,
+  createAction = false
 ) {
   const userRef = await fauna.query(
     q.Select(
@@ -29,12 +30,29 @@ export async function saveSubscription(
     price_id: subscription.items.data[0].price.id
   }
 
-  await fauna.query(
-    q.Create(
-      q.Collection('subscriptions'),
-      { data: subscriptionData }
+  if(createAction) {
+    await fauna.query(
+      q.Create(
+        q.Collection('subscriptions'),
+        { data: subscriptionData }
+      )
     )
-  )
+  } else {
+    await fauna.query(
+      q.Replace(
+        q.Select(
+          'ref',
+          q.Get(
+            q.Match(
+              q.Index('subscription_by_id'),
+              subscriptionId
+            )
+          )
+        ),
+        { data: subscriptionData }
+      )
+    )
+  }
 }
 
 // every file or folder that starts with '_' in the name, will not be converted to a route by the nextJS
