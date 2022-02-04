@@ -19,6 +19,44 @@ export default NextAuth({
     }),
   ],
   callbacks: {
+    async session({ session }) {
+      const email = 'ig-news@ignews.com'
+
+      try {
+        const userActiveSubscription = await fauna.query(
+          q.Get(
+            q.Intersection([ // when you want to search for information that assumes two conditions (example: size 'g' and 'black' color), if intersection is used
+              q.Match(
+                q.Index('subscription_by_user_ref'),
+                q.Select(
+                  'ref',
+                  q.Get(
+                    q.Match(
+                      q.Index('user_by_email'),
+                      q.Casefold(email)
+                    )
+                  )
+                )
+              ),
+              q.Match(
+                q.Index('subscription_by_status'),
+                'active'
+              )
+            ])
+          )
+        )
+
+        return {
+          ...session,
+          activeSubscription: userActiveSubscription
+        }
+      } catch {
+        return {
+          ...session,
+          activeSubscription: null
+        }
+      }
+    },
     async signIn({ user, account, profile }) {
       const email = 'ig-news@ignews.com'
 

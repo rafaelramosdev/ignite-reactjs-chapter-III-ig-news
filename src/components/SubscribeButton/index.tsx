@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router'
+
 import { signIn, useSession } from 'next-auth/react'
 
 import { api } from '../../services/api'
@@ -14,9 +16,16 @@ export function SubscribeButton({ priceId }: SubscribeButtonProps) {
 
   const { data: session } = useSession()
 
+  const router = useRouter() // whenever you need to redirect the user through a function or in a programmatic way and not by a button that he clicks or a link, you should always use the nextJS 'useRouter'
+
   async function handleSubscribe() {
     if(!session) {
       signIn('github')
+      return
+    }
+
+    if(session.activeSubscription) {
+      router.push('/posts')
       return
     }
 
