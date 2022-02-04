@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { GetStaticProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 
 import { useRouter } from 'next/router'
 
@@ -67,9 +67,9 @@ export default function PostPreview({ post }: PostPreviewProps) {
   )
 }
 
-export const getStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [],
+    paths: [], // when you want the pages to be statically generated when the user first accesses it, leave this array empty
     fallback: 'blocking'
   }
 }
@@ -95,6 +95,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => { // every p
   return {
     props: {
       post
-    }
+    },
+    revalidate: 60 * 30 // 30 minutes
   }
 }
