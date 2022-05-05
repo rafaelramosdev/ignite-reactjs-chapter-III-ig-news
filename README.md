@@ -42,8 +42,8 @@ Este é um projeto desenvolvido como prática das aulas do Chapter III da trilha
 Clone o projeto e acesse a pasta do mesmo.
 
 ```bash
-$ git clone https://github.com/rafaelramosdev/ignite-reactjs-chapter-III-ig-news
-$ cd ignite-reactjs-chapter-III-ig-news
+$ git clone https://github.com/rafaelramosdev/ig-news
+$ cd ig-news
 ```
 
 Para iniciá-lo, siga os passos abaixo:
